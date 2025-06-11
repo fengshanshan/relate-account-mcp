@@ -1,6 +1,7 @@
+#!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getTextResponseFromOpenAI } from "./utils.js";
+import { getTextResponseFromGemini } from "./utils.js";
 
 import { z } from "zod";
 import "dotenv/config";
@@ -22,19 +23,18 @@ server.tool(
   },
   async ({ platform, identity }) => {
     try {
-      const response = await fetch(
-        `https://api.web3.bio/graph?identity=${identity}&platform=${platform}`,
-        {}
-      );
-      const json = await response.json();
+      const request_url =
+        process.env.DATA_API_URL + `?identity=${identity}&platform=${platform}`;
+      const responseFromAPI = await fetch(request_url, {});
+      const json = await responseFromAPI.json();
       const input = `help me get the related address or domain name from the following text: ${json}`;
-      const responseFromOpenAI = await getTextResponseFromOpenAI(input);
+      const response = await getTextResponseFromGemini(input);
 
       return {
         content: [
           {
             type: "text",
-            text: `${responseFromOpenAI}`,
+            text: `${response}`,
           },
         ],
       };
@@ -54,7 +54,7 @@ server.tool(
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Weather MCP Server running on stdio");
+  console.error("Relate Account MCP Server running on stdio");
 }
 
 main().catch((error) => {

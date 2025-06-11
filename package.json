@@ -1,26 +1,47 @@
 {
-  "name": "relate-account-mcp",
+  "name": "@fengshanshan/server-relate-account",
   "version": "1.0.0",
-  "description": "relate-account-mcp",
+  "description": "Model Context Protocol server for getting related Web3 addresses and domains",
   "type": "module",
   "bin": {
-    "relate-account": "./build/index.js"
+    "mcp-server-relate-account": "./build/index.js"
   },
   "scripts": {
-    "build": "tsc && chmod 755 build/index.js"
+    "build": "tsc && chmod 755 build/index.js",
+    "prepublishOnly": "npm run build",
+    "start": "node build/index.js"
   },
-  "files": ["build"],
-  "main": "index.ts",
+  "files": [
+    "build",
+    "README.md"
+  ],
+  "main": "./build/index.js",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "web3",
+    "blockchain",
+    "address",
+    "domain"
+  ],
   "author": "fengshanshan",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengshanshan/relate-account-mcp.git"
+  },
   "dependencies": {
+    "@google/genai": "^1.4.0",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "dotenv": "^16.5.0",
-    "openai": "^5.2.0",
+    "openai": "^5.3.0",
     "zod": "^3.25.57"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

@@ -37,11 +37,30 @@ Add the following configuration to your MCP client settings:
 ### Claude Desktop
 Add to your `claude_desktop_config.json`:
 ```json
+//to your local relate-account-service
 {
   "mcpServers": {
     "relate-account": {
       "command": "node",
       "args": ["/absolute/path/to/relate-account-mcp/build/index.js"]
+    }
+  }
+}
+
+//use publish service
+{
+  "mcpServers": {
+    "relate-account": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@fengshanshan/mcp-server-relate-account"
+      ],
+      "cwd": "/Users/shanshan/Project/mcp/relate-account-mcp",
+      "env": {
+        "DATA_API_URL": "web3.bio one",
+        "Gemini_API_KEY": "your-gemini-api-key-here"
+        }
     }
   }
 }
