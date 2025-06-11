@@ -56,7 +56,6 @@ Add to your `claude_desktop_config.json`:
         "-y",
         "@fengshanshan/mcp-server-relate-account"
       ],
-      "cwd": "/Users/shanshan/Project/mcp/relate-account-mcp",
       "env": {
         "DATA_API_URL": "web3.bio one",
         "Gemini_API_KEY": "your-gemini-api-key-here"
