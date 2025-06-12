@@ -22,7 +22,7 @@ A Model Context Protocol (MCP) server that helps discover related blockchain add
 2. **Set up environment variables:**
    ```bash
    # Create .env file
-   echo "OPENAI_API_KEY=your_openai_api_key_here" > .env
+   echo "DATA_API_URL=data_api_server" > .env
    ```
 
 3. **Build the project:**
@@ -57,8 +57,7 @@ Add to your `claude_desktop_config.json`:
         "@fengshanshan/mcp-server-relate-account"
       ],
       "env": {
-        "DATA_API_URL": "web3.bio one",
-        "Gemini_API_KEY": "your-gemini-api-key-here"
+        "DATA_API_URL": "web3.bio one"
         }
     }
   }
@@ -76,7 +75,7 @@ node /path/to/relate-account-mcp/build/index.js
 Once configured, you can use the `get-related-address` tool in your MCP client:
 
 ### Parameters
-- **platform** (string): The platform to search on (e.g., "ethereum", "farcaster", "lens")
+- **platform** (string): The platform to search on (e.g., "ethereum", "farcaster", "lens", "ens")
 - **identity** (string): The user's identity (address, ENS domain, username, etc.)
 
 
