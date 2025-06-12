@@ -9,7 +9,7 @@ export async function getTextResponseFromOpenAI(input: string) {
     input,
   });
 
-  return response.output_text;
+  return response.output_text ?? "";
 }
 
 export async function getTextResponseFromGemini(input: string) {
@@ -20,5 +20,5 @@ export async function getTextResponseFromGemini(input: string) {
     contents: input,
   });
 
-  return response.text;
+  return response.text ?? "";
 }

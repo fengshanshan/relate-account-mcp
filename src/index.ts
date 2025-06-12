@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getTextResponseFromGemini } from "./utils.js";
+import {
+  getTextResponseFromGemini,
+  getTextResponseFromOpenAI,
+} from "./utils.js";
 
 import { z } from "zod";
 import "dotenv/config";
@@ -22,13 +25,31 @@ server.tool(
     identity: z.string().describe("User's identity"),
   },
   async ({ platform, identity }) => {
+    let json = null;
     try {
       const request_url =
         process.env.DATA_API_URL + `?identity=${identity}&platform=${platform}`;
       const responseFromAPI = await fetch(request_url, {});
-      const json = await responseFromAPI.json();
+      json = await responseFromAPI.json();
+    } catch (err) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error fetching data: ${(err as Error).message}`,
+          },
+        ],
+      };
+    }
+
+    try {
       const input = `help me get the related address or domain name from the following text: ${json}`;
-      const response = await getTextResponseFromGemini(input);
+      let response = "";
+      if (process.env.MODEL == "gemini") {
+        response = await getTextResponseFromGemini(input);
+      } else {
+        response = await getTextResponseFromOpenAI(input);
+      }
 
       return {
         content: [
@@ -43,7 +64,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Error fetching data ...`,
+            text: `agent process data error: ${(err as Error).message}`,
           },
         ],
       };
