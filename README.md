@@ -2,33 +2,11 @@
 
 A Model Context Protocol (MCP) server that helps discover related blockchain addresses and domain names for web3 identities across different platforms.
 
-## Features
+## Tools
 
-- 🔍 **Cross-Platform Identity Resolution**: Find related addresses across Ethereum, Farcaster, Lens, and other web3 platforms
-- 🤖 **AI-Powered Analysis**: Uses OpenAI to intelligently extract and format related identity information
-- 📡 **Web3.bio Integration**: Leverages the web3.bio API for comprehensive identity graph data
-- ⚡ **MCP Compatible**: Works seamlessly with any MCP-compatible client
+- 🔍 **get-related-address**
+Find related addresses across Ethereum, Farcaster, Lens, and other web3 platforms. Leverages the data source in [relation-server](https://github.com/NextDotID/relation_server) of next.id.
 
-
-## Installation
-
-1. **Clone and install dependencies:**
-   ```bash
-   git clone <repository-url>
-   cd relate-account-mcp
-   npm install
-   ```
-
-2. **Set up environment variables:**
-   ```bash
-   # Create .env file
-   echo "DATA_API_URL=data_api_server" > .env
-   ```
-
-3. **Build the project:**
-   ```bash
-   npm run build
-   ```
 
 ## Configuration
 
@@ -43,6 +21,10 @@ Add to your `claude_desktop_config.json`:
     "relate-account": {
       "command": "node",
       "args": ["/absolute/path/to/relate-account-mcp/build/index.js"]
+    },
+    "env": {
+        "DATA_API_URL": "https://graph.web3.bio/graphql",
+        "ACCESS_TOKEN":"YOUR_ACCESS_TOKEN" //if no access_token, will be limited after a certain amount of request
     }
   }
 }
@@ -57,7 +39,8 @@ Add to your `claude_desktop_config.json`:
         "@fengshanshan/mcp-server-relate-account"
       ],
       "env": {
-        "DATA_API_URL": "web3.bio one"
+        "DATA_API_URL": "https://graph.web3.bio/graphql",
+        "ACCESS_TOKEN":"YOUR_ACCESS_TOKEN" //if no access_token, will be limited after a certain amount of request
         }
     }
   }
@@ -91,6 +74,3 @@ npm run build
 # The compiled JavaScript will be in the build/ directory
 ```
 
----
-
-**Note**: This MCP server requires an active internet connection to query the web3.bio API and OpenAI services.

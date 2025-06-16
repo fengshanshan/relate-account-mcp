@@ -1,0 +1,318 @@
+type Query {
+  identities(ids: [String!]!, refresh: Boolean! = false): [IdentityRecordSimplified!]!
+  identitiesWithGraph(ids: [String!]!, refresh: Boolean! = false): [IdentityRecord]!
+  identity(platform: Platform!, identity: String!, refresh: Boolean! = false): IdentityRecord
+  domainAvailableSearch(name: String!): [AvailableDomain!]!
+}
+
+type IdentityRecordSimplified {
+  id: String!
+  aliases: [String!]!
+  identity: String!
+  platform: Platform!
+  network: Network
+  primaryName: String
+  isPrimary: Boolean!
+  resolvedAddress: [Address!]!
+  ownerAddress: [Address!]!
+  managerAddress: [Address!]!
+  expiredAt: datetime
+  updatedAt: datetime
+  registeredAt: datetime
+  profile: Profile
+  credentials: [CredentialRecord!]
+  status: Status
+}
+
+enum Platform {
+  ethereum
+  solana
+  ens
+  sns
+  farcaster
+  lens
+  clusters
+  basenames
+  unstoppabledomains
+  space_id
+  dotbit
+  ckb
+  box
+  linea
+  justaname
+  zeta
+  mode
+  arbitrum
+  taiko
+  mint
+  zkfair
+  manta
+  lightlink
+  genome
+  merlin
+  alienx
+  tomo
+  ailayer
+  gravity
+  bitcoin
+  litecoin
+  dogecoin
+  aptos
+  stacks
+  tron
+  ton
+  xrpc
+  cosmos
+  arweave
+  algorand
+  firefly
+  particle
+  privy
+  twitter
+  bluesky
+  github
+  discord
+  telegram
+  dentity
+  email
+  linkedin
+  reddit
+  nextid
+  keybase
+  facebook
+  dns
+  nftd
+  gallery
+  paragraph
+  mirror
+  instagram
+  crowdsourcing
+  nostr
+  gmgn
+  talentprotocol
+  foundation
+  rarible
+  soundxyz
+  warpcast
+  opensea
+  icebreaker
+  tally
+}
+
+enum Network {
+  ethereum
+  rsk
+  vechain
+  optimism
+  cronos
+  bnb_smart_chain
+  gochain
+  ethereum_classic
+  tomochain
+  poa
+  gnosis
+  thundercore
+  polygon
+  manta_pacific
+  energy_web
+  fantom_opera
+  boba
+  zksync
+  theta
+  callisto
+  metis
+  mantle
+  base
+  energi
+  arbitrum_one
+  celo
+  avalanche_c_chain
+  avalanche
+  linea
+  scroll
+  zora
+  aptos
+  stacks
+  tron
+  ton
+  xrpc
+  cosmos
+  gravity
+  bitcoin
+  litecoin
+  dogecoin
+  reddcoin
+  dash
+  peercoin
+  namecoin
+  viacoin
+  digibyte
+  monacoin
+  aib
+  syscoin
+  bitcoin_cash
+  bitcoinsv
+  litecoincash
+  verge
+  stratis
+  ark
+  zencash
+  zcash
+  firo
+  ripple
+  bitcoin_gold
+  ravencoin
+  divi_project
+  neo
+  counos
+  counos_x
+  bitcoin_pos
+  large_coin
+  bitcoin_diamond
+  tezos
+  flux
+  waykichain
+  ckb
+  decred
+  monero
+  near
+  solana
+  haven_protocol
+  hive
+  atom
+  iotex
+  terra
+  iota
+  bnb
+  harmony_one
+  hbar
+  v_systems
+  lisk
+  steem
+  polkadot
+  cardano
+  flow
+  stellar
+  algorand
+  arweave
+}
+
+type Address {
+  network: Network!
+  address: String!
+}
+
+"""epoch datetime"""
+scalar datetime
+
+type Profile {
+  uid: String
+  identity: String!
+  platform: Platform!
+  network: Network
+  address: String
+  displayName: String
+  avatar: String
+  description: String
+  contenthash: String
+  texts: JSON
+  addresses: [Address!]!
+  social: SocialProfile
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf).
+"""
+scalar JSON
+
+type SocialProfile {
+  uid: String
+  following: Union
+  follower: Union
+  updatedAt: datetime
+}
+
+"""BigInt field"""
+scalar Union
+
+type CredentialRecord {
+  category: String!
+  type: String!
+  value: String!
+  platform: Platform!
+  dataSource: String!
+  link: String
+  updatedAt: datetime
+}
+
+enum Status {
+  cached
+  expired
+}
+
+type IdentityRecord {
+  id: String!
+  aliases: [String!]!
+  identity: String!
+  platform: Platform!
+  network: Network
+  primaryName: String
+  isPrimary: Boolean!
+  resolvedAddress: [Address!]!
+  ownerAddress: [Address!]!
+  managerAddress: [Address!]!
+  expiredAt: datetime
+  updatedAt: datetime
+  registeredAt: datetime
+  profile: Profile
+  credentials: [CredentialRecord!]
+  status: Status
+  identityGraph: IdentityGraph
+}
+
+type IdentityGraph {
+  graphId: String!
+  vertices: [IdentityRecordSimplified!]!
+  edges: [IdentityConnection!]!
+}
+
+type IdentityConnection {
+  edgeType: EdgeType!
+  dataSource: Platform!
+  source: String!
+  target: String!
+}
+
+enum EdgeType {
+  Auth
+  MPC
+  Proof
+  Hold
+  Resolve
+  Reverse_Resolve
+}
+
+type AvailableDomain {
+  platform: Platform!
+  name: String!
+  tld: String!
+  expiredAt: datetime
+  availability: Boolean!
+  status: DomainStatus!
+}
+
+enum DomainStatus {
+  taken
+  protected
+  available
+  unavailable
+}
+
+type Mutation {
+  accountDisable(platform: Platform!, identity: String!): AccountDisableResponse!
+}
+
+type AccountDisableResponse {
+  message: String!
+  isSuccess: Boolean!
+}
