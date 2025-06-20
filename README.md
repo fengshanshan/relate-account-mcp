@@ -1,12 +1,13 @@
 # Related Identity MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@fengshanshan/relate-account-mcp)](https://smithery.ai/server/@fengshanshan/relate-account-mcp)
+
 A Model Context Protocol (MCP) server that helps discover related blockchain addresses and domain names for web3 identities across different platforms.
 
 ## Tools
 
 - 🔍 **get-related-address**
 Find related addresses across Ethereum, Farcaster, Lens, and other web3 platforms. Leverages the data source in [relation-server](https://github.com/NextDotID/relation_server) of next.id.
-
 
 ## Configuration
 
@@ -74,3 +75,10 @@ npm run build
 # The compiled JavaScript will be in the build/ directory
 ```
 
+### Installing via Smithery
+
+To install relate-account-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@fengshanshan/relate-account-mcp):
+
+```bash
+npx -y @smithery/cli install @fengshanshan/relate-account-mcp --client claude
+```

@@ -1,0 +1,23 @@
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+startCommand:
+  type: stdio
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'node', args: ['build/index.js'], env: { DATA_API_URL: config.dataApiUrl || undefined, ACCESS_TOKEN: config.accessToken || undefined } })
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required: []
+    properties:
+      dataApiUrl:
+        type: string
+        default: https://graph.web3.bio/graphql
+        description: GraphQL API endpoint
+      accessToken:
+        type: string
+        description: Optional access token for higher rate limits
+  exampleConfig:
+    dataApiUrl: https://graph.web3.bio/graphql
+    accessToken: YOUR_ACCESS_TOKEN
