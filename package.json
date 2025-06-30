@@ -8,18 +8,7 @@
   },
   "scripts": {
     "build": "tsc && chmod 755 build/index.js",
-    "build:watch": "tsc --watch",
-    "dev": "npm run build && npm run start",
-    "dev:watch": "npm run build:watch & npm run start:watch",
-    "start": "node build/index.js",
-    "start:watch": "nodemon build/index.js",
-    "prepublishOnly": "npm run build",
-    "export-schema": "npx tsx utils/exportGraphQL.ts",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
-    "type-check": "tsc --noEmit",
-    "clean": "rm -rf build",
-    "test": "echo \"No tests specified\" && exit 0"
+    "start": "node build/index.js"
   },
   "files": [
     "build",

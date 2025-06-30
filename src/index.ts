@@ -9,51 +9,10 @@ import "dotenv/config";
 const API_ENDPOINT =
   process.env.DATA_API_URL || "https://graph.web3.bio/graphql";
 const REQUEST_TIMEOUT = 10000; // 10 seconds
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
-// Types
-interface CacheEntry {
-  data: any;
-  timestamp: number;
-}
 
 interface GraphQLQuery {
   query: string;
   variables: Record<string, any>;
-}
-
-// Simple in-memory cache
-class SimpleCache {
-  private cache = new Map<string, CacheEntry>();
-
-  get(key: string): any | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-
-    if (Date.now() - entry.timestamp > CACHE_TTL) {
-      this.cache.delete(key);
-      return null;
-    }
-
-    return entry.data;
-  }
-
-  set(key: string, data: any): void {
-    this.cache.set(key, {
-      data,
-      timestamp: Date.now(),
-    });
-  }
-
-  // Clean up expired entries periodically
-  cleanup(): void {
-    const now = Date.now();
-    for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > CACHE_TTL) {
-        this.cache.delete(key);
-      }
-    }
-  }
 }
 
 // GraphQL query template
@@ -218,11 +177,6 @@ const PlatformSchema = z
 
 const IdentitySchema = z.string().min(1).max(256);
 
-// Utility functions
-function createCacheKey(platform: string, identity: string): string {
-  return `${platform}:${identity}`.toLowerCase();
-}
-
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
@@ -274,12 +228,6 @@ async function executeGraphQLQuery(query: GraphQLQuery): Promise<any> {
   return json.data;
 }
 
-// Initialize cache
-const cache = new SimpleCache();
-
-// Cleanup cache every 3 minutes
-setInterval(() => cache.cleanup(), 3 * 60 * 1000);
-
 const server = new McpServer({
   name: "relate-account",
   version: "3.0.0",
@@ -304,28 +252,6 @@ server.tool(
         throw new Error("Identity cannot be empty");
       }
 
-      // Check cache first
-      const cacheKey = createCacheKey(normalizedPlatform, normalizedIdentity);
-      const cachedResult = cache.get(cacheKey);
-
-      if (cachedResult) {
-        console.error(`Cache hit for ${cacheKey}`);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `The related information is: ${JSON.stringify(
-                cachedResult
-              )}`,
-            },
-          ],
-        };
-      }
-
-      console.error(
-        `Fetching data for ${normalizedPlatform}:${normalizedIdentity}`
-      );
-
       // Execute GraphQL query
       const data = await executeGraphQLQuery({
         query: IDENTITY_QUERY,
@@ -334,9 +260,6 @@ server.tool(
           identity: normalizedIdentity,
         },
       });
-
-      // Cache the result
-      cache.set(cacheKey, data);
 
       return {
         content: [
